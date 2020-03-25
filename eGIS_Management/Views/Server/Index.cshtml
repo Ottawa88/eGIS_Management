@@ -1,0 +1,100 @@
+﻿@model IEnumerable<eGIS_Management.Models.GIS_Server>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FQDN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IP_Address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Diskspace_GB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RAM_GB)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CPU)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Note)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Last_Updated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Last_Updated_By)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GIS_Environment.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Network_Zone.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OS1.OS_Name)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FQDN)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IP_Address)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Diskspace_GB)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RAM_GB)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CPU)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Note)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Last_Updated)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Last_Updated_By)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GIS_Environment.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Network_Zone.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OS1.OS_Name)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Server_ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Server_ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Server_ID })
+        </td>
+    </tr>
+}
+
+</table>

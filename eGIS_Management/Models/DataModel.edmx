@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="IMTS_GISModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="GIS_Environment">
+          <Key>
+            <PropertyRef Name="Environment_ID" />
+          </Key>
+          <Property Name="Environment_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="URL" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Last_Updated" Type="date" />
+          <Property Name="Last_UpdatedBy" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="GIS_Server">
+          <Key>
+            <PropertyRef Name="Server_ID" />
+          </Key>
+          <Property Name="Server_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FQDN" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Zone_ID" Type="smallint" Nullable="false" />
+          <Property Name="IP_Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="gis_environment_ID" Type="int" Nullable="false" />
+          <Property Name="OS" Type="smallint" Nullable="false" />
+          <Property Name="Diskspace_GB" Type="int" Nullable="false" />
+          <Property Name="RAM_GB" Type="smallint" Nullable="false" />
+          <Property Name="CPU" Type="smallint" />
+          <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Last_Updated" Type="date" />
+          <Property Name="Last_Updated_By" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Network_Zone">
+          <Key>
+            <PropertyRef Name="Zone_ID" />
+          </Key>
+          <Property Name="Zone_ID" Type="smallint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Note" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OS">
+          <Key>
+            <PropertyRef Name="OS_ID" />
+          </Key>
+          <Property Name="OS_ID" Type="smallint" Nullable="false" />
+          <Property Name="OS_Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Server_Software">
+          <Key>
+            <PropertyRef Name="Server_ID" />
+            <PropertyRef Name="Software_ID" />
+          </Key>
+          <Property Name="Server_ID" Type="int" Nullable="false" />
+          <Property Name="Software_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Software">
+          <Key>
+            <PropertyRef Name="Software_ID" />
+          </Key>
+          <Property Name="Software_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name_Version" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Note" Type="nvarchar" MaxLength="500" />
+          <Property Name="Last_Updated" Type="date" />
+          <Property Name="Last_UpdatedBy" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_gis_server_OS_List">
+          <End Role="OS" Type="Self.OS" Multiplicity="1" />
+          <End Role="GIS_Server" Type="Self.GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OS">
+              <PropertyRef Name="OS_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="OS" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Server_List_and_gis_environment">
+          <End Role="GIS_Environment" Type="Self.GIS_Environment" Multiplicity="1" />
+          <End Role="GIS_Server" Type="Self.GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GIS_Environment">
+              <PropertyRef Name="Environment_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="gis_environment_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Server_List_Network_Zone">
+          <End Role="Network_Zone" Type="Self.Network_Zone" Multiplicity="1" />
+          <End Role="GIS_Server" Type="Self.GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Network_Zone">
+              <PropertyRef Name="Zone_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="Zone_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Server_Software_and_Server_List">
+          <End Role="GIS_Server" Type="Self.GIS_Server" Multiplicity="1" />
+          <End Role="Server_Software" Type="Self.Server_Software" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GIS_Server">
+              <PropertyRef Name="Server_ID" />
+            </Principal>
+            <Dependent Role="Server_Software">
+              <PropertyRef Name="Server_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Server_Software_Software_List">
+          <End Role="Software" Type="Self.Software" Multiplicity="1" />
+          <End Role="Server_Software" Type="Self.Server_Software" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Software">
+              <PropertyRef Name="Software_ID" />
+            </Principal>
+            <Dependent Role="Server_Software">
+              <PropertyRef Name="Software_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="IMTS_GISModelStoreContainer">
+          <EntitySet Name="GIS_Environment" EntityType="Self.GIS_Environment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GIS_Server" EntityType="Self.GIS_Server" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Network_Zone" EntityType="Self.Network_Zone" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OS" EntityType="Self.OS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Server_Software" EntityType="Self.Server_Software" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Software" EntityType="Self.Software" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_gis_server_OS_List" Association="Self.FK_gis_server_OS_List">
+            <End Role="OS" EntitySet="OS" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Server_List_and_gis_environment" Association="Self.FK_Server_List_and_gis_environment">
+            <End Role="GIS_Environment" EntitySet="GIS_Environment" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Server_List_Network_Zone" Association="Self.FK_Server_List_Network_Zone">
+            <End Role="Network_Zone" EntitySet="Network_Zone" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Server_Software_and_Server_List" Association="Self.FK_Server_Software_and_Server_List">
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+            <End Role="Server_Software" EntitySet="Server_Software" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Server_Software_Software_List" Association="Self.FK_Server_Software_Software_List">
+            <End Role="Software" EntitySet="Software" />
+            <End Role="Server_Software" EntitySet="Server_Software" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IMTS_GISModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityContainer Name="IMTS_GISEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="GIS_Environment" EntityType="IMTS_GISModel.GIS_Environment" />
+          <EntitySet Name="GIS_Server" EntityType="IMTS_GISModel.GIS_Server" />
+          <EntitySet Name="Network_Zone" EntityType="IMTS_GISModel.Network_Zone" />
+          <EntitySet Name="Softwares" EntityType="IMTS_GISModel.Software" />
+          <AssociationSet Name="FK_Server_List_and_gis_environment" Association="IMTS_GISModel.FK_Server_List_and_gis_environment">
+            <End Role="GIS_Environment" EntitySet="GIS_Environment" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Server_List_Network_Zone" Association="IMTS_GISModel.FK_Server_List_Network_Zone">
+            <End Role="Network_Zone" EntitySet="Network_Zone" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
+          <AssociationSet Name="Server_Software" Association="IMTS_GISModel.Server_Software">
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+            <End Role="Software" EntitySet="Softwares" />
+          </AssociationSet>
+          <EntitySet Name="OS" EntityType="IMTS_GISModel.OS" />
+          <AssociationSet Name="FK_gis_server_OS_List" Association="IMTS_GISModel.FK_gis_server_OS_List">
+            <End Role="OS" EntitySet="OS" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="GIS_Environment">
+          <Key>
+            <PropertyRef Name="Environment_ID" />
+          </Key>
+          <Property Name="Environment_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="URL" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Last_Updated" Type="DateTime" Precision="0" />
+          <Property Name="Last_UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.FK_Server_List_and_gis_environment" FromRole="GIS_Environment" ToRole="GIS_Server" />
+        </EntityType>
+        <EntityType Name="GIS_Server">
+          <Key>
+            <PropertyRef Name="Server_ID" />
+          </Key>
+          <Property Name="Server_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FQDN" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Zone_ID" Type="Int16" Nullable="false" />
+          <Property Name="IP_Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="gis_environment_ID" Type="Int32" Nullable="false" />
+          <Property Name="OS" Type="Int16" Nullable="false" />
+          <Property Name="Diskspace_GB" Type="Int32" Nullable="false" />
+          <Property Name="RAM_GB" Type="Int16" Nullable="false" />
+          <Property Name="CPU" Type="Int16" />
+          <Property Name="Note" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Last_Updated" Type="DateTime" Precision="0" />
+          <Property Name="Last_Updated_By" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GIS_Environment" Relationship="IMTS_GISModel.FK_Server_List_and_gis_environment" FromRole="GIS_Server" ToRole="GIS_Environment" />
+          <NavigationProperty Name="Network_Zone" Relationship="IMTS_GISModel.FK_Server_List_Network_Zone" FromRole="GIS_Server" ToRole="Network_Zone" />
+          <NavigationProperty Name="Softwares" Relationship="IMTS_GISModel.Server_Software" FromRole="GIS_Server" ToRole="Software" />
+          <NavigationProperty Name="OS1" Relationship="IMTS_GISModel.FK_gis_server_OS_List" FromRole="GIS_Server" ToRole="OS" />
+        </EntityType>
+        <EntityType Name="Network_Zone">
+          <Key>
+            <PropertyRef Name="Zone_ID" />
+          </Key>
+          <Property Name="Zone_ID" Type="Int16" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.FK_Server_List_Network_Zone" FromRole="Network_Zone" ToRole="GIS_Server" />
+        </EntityType>
+        <EntityType Name="Software">
+          <Key>
+            <PropertyRef Name="Software_ID" />
+          </Key>
+          <Property Name="Software_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name_Version" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Last_Updated" Type="DateTime" Precision="0" />
+          <Property Name="Last_UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.Server_Software" FromRole="Software" ToRole="GIS_Server" />
+        </EntityType>
+        <Association Name="FK_Server_List_and_gis_environment">
+          <End Type="IMTS_GISModel.GIS_Environment" Role="GIS_Environment" Multiplicity="1" />
+          <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GIS_Environment">
+              <PropertyRef Name="Environment_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="gis_environment_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Server_List_Network_Zone">
+          <End Type="IMTS_GISModel.Network_Zone" Role="Network_Zone" Multiplicity="1" />
+          <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Network_Zone">
+              <PropertyRef Name="Zone_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="Zone_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Server_Software">
+          <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
+          <End Type="IMTS_GISModel.Software" Role="Software" Multiplicity="*" />
+        </Association>
+        <EntityType Name="OS">
+          <Key>
+            <PropertyRef Name="OS_ID" />
+          </Key>
+          <Property Name="OS_ID" Type="Int16" Nullable="false" />
+          <Property Name="OS_Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.FK_gis_server_OS_List" FromRole="OS" ToRole="GIS_Server" />
+        </EntityType>
+        <Association Name="FK_gis_server_OS_List">
+          <End Type="IMTS_GISModel.OS" Role="OS" Multiplicity="1" />
+          <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OS">
+              <PropertyRef Name="OS_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="OS" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IMTS_GISModelStoreContainer" CdmEntityContainer="IMTS_GISEntities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="IMTS_GISModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GIS_Environment">
+            <EntityTypeMapping TypeName="IMTS_GISModel.GIS_Environment">
+              <MappingFragment StoreEntitySet="GIS_Environment">
+                <ScalarProperty Name="Last_UpdatedBy" ColumnName="Last_UpdatedBy" />
+                <ScalarProperty Name="Last_Updated" ColumnName="Last_Updated" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Environment_ID" ColumnName="Environment_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GIS_Server">
+            <EntityTypeMapping TypeName="IMTS_GISModel.GIS_Server">
+              <MappingFragment StoreEntitySet="GIS_Server">
+                <ScalarProperty Name="Last_Updated_By" ColumnName="Last_Updated_By" />
+                <ScalarProperty Name="Last_Updated" ColumnName="Last_Updated" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="CPU" ColumnName="CPU" />
+                <ScalarProperty Name="RAM_GB" ColumnName="RAM_GB" />
+                <ScalarProperty Name="Diskspace_GB" ColumnName="Diskspace_GB" />
+                <ScalarProperty Name="OS" ColumnName="OS" />
+                <ScalarProperty Name="gis_environment_ID" ColumnName="gis_environment_ID" />
+                <ScalarProperty Name="IP_Address" ColumnName="IP_Address" />
+                <ScalarProperty Name="Zone_ID" ColumnName="Zone_ID" />
+                <ScalarProperty Name="FQDN" ColumnName="FQDN" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Server_ID" ColumnName="Server_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Network_Zone">
+            <EntityTypeMapping TypeName="IMTS_GISModel.Network_Zone">
+              <MappingFragment StoreEntitySet="Network_Zone">
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Zone_ID" ColumnName="Zone_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Softwares">
+            <EntityTypeMapping TypeName="IMTS_GISModel.Software">
+              <MappingFragment StoreEntitySet="Software">
+                <ScalarProperty Name="Last_UpdatedBy" ColumnName="Last_UpdatedBy" />
+                <ScalarProperty Name="Last_Updated" ColumnName="Last_Updated" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Name_Version" ColumnName="Name_Version" />
+                <ScalarProperty Name="Software_ID" ColumnName="Software_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Server_Software" TypeName="IMTS_GISModel.Server_Software" StoreEntitySet="Server_Software">
+            <EndProperty Name="Software">
+              <ScalarProperty Name="Software_ID" ColumnName="Software_ID" />
+            </EndProperty>
+            <EndProperty Name="GIS_Server">
+              <ScalarProperty Name="Server_ID" ColumnName="Server_ID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="OS">
+            <EntityTypeMapping TypeName="IMTS_GISModel.OS">
+              <MappingFragment StoreEntitySet="OS">
+                <ScalarProperty Name="OS_Name" ColumnName="OS_Name" />
+                <ScalarProperty Name="OS_ID" ColumnName="OS_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

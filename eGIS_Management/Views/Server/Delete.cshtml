@@ -1,0 +1,121 @@
+﻿@model eGIS_Management.Models.GIS_Server
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>GIS_Server</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FQDN)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FQDN)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IP_Address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IP_Address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Diskspace_GB)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Diskspace_GB)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RAM_GB)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RAM_GB)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CPU)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CPU)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Note)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Last_Updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Last_Updated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Last_Updated_By)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Last_Updated_By)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GIS_Environment.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GIS_Environment.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Network_Zone.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Network_Zone.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OS1.OS_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OS1.OS_Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>
