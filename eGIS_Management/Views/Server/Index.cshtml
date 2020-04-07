@@ -1,4 +1,6 @@
-﻿@model IEnumerable<eGIS_Management.Models.GIS_Server>
+﻿@model PagedList.IPagedList<eGIS_Management.Models.GIS_Server>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Index";
@@ -8,93 +10,111 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("Admin"))
+        {
+            @Html.ActionLink("Create New", "Create")
+        }
+    }
 </p>
-<table class="table">
+<table class="table table-hover table-striped  table-responsive">
     <tr>
+
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+
+            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FQDN)
+
+            @Html.ActionLink("Environment", "Index", new { sortOrder = ViewBag.EnvironmentSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+
+        <th>
+
+            @Html.ActionLink("Zone", "Index", new { sortOrder = ViewBag.ZoneSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.IP_Address)
+
+            @Html.ActionLink("Region", "Index", new { sortOrder = ViewBag.RegionSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+
+        <th>
+
+            @Html.ActionLink("Diskspace(GB)", "Index", new { sortOrder = ViewBag.Diskspace_GBSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Diskspace_GB)
+
+            @Html.ActionLink("RAM (GB)", "Index", new { sortOrder = ViewBag.RAM_GBSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RAM_GB)
+
+            @Html.ActionLink("CPU", "Index", new { sortOrder = ViewBag.CPUSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CPU)
+
+            @Html.ActionLink("IP_Address", "Index", new { sortOrder = ViewBag.IP_AddressSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Note)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Last_Updated)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Last_Updated_By)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GIS_Environment.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Network_Zone.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OS1.OS_Name)
-        </th>
+
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FQDN)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IP_Address)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Diskspace_GB)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RAM_GB)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CPU)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Note)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Last_Updated)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Last_Updated_By)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GIS_Environment.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Network_Zone.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OS1.OS_Name)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Server_ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Server_ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Server_ID })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GIS_Environment.Name)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Network_Zone.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DFO_Region.Region)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Diskspace_GB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RAM_GB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CPU)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IP_Address)
+            </td>
+
+            <td>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Admin") | User.IsInRole("Editor"))
+                    {
+                        @Html.ActionLink("Edit |", "Edit", new { id = item.Server_ID })
+                    }
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Delete |", "Delete", new { id = item.Server_ID })
+                    }
+                }
+
+                @Html.ActionLink("Details", "Details", new { id = item.Server_ID }) 
+
+            </td>
+        </tr>
+    }
 
 </table>
+<br />
+  Total <b>@ViewBag.TotalCount </b> records.        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+

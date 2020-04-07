@@ -1,11 +1,11 @@
-﻿@model eGIS_Management.Models.GIS_Server
+﻿@model eGIS_Management.Models.Client_Contact
 
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit GIS Server</h2>
+<h2>Edit Client Contact</h2>
 
 
 @using (Html.BeginForm())
@@ -16,11 +16,11 @@
   
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Server_ID)
+    @Html.HiddenFor(model => model.Client_ID)
+    @Html.Partial("Client_Contact_Partial")
 
-    @Html.Partial("GIS_ServerPartial")
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-9">
+        <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Save" class="btn btn-default" />
         </div>
     </div>

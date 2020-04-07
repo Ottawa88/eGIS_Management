@@ -5,6 +5,45 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="IMTS_GISModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Application">
+          <Key>
+            <PropertyRef Name="App_ID" />
+          </Key>
+          <Property Name="App_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="APM_ID" Type="int" />
+          <Property Name="GIS_Environment_ID" Type="int" Nullable="false" />
+          <Property Name="URL_En" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="URL_Fr" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="2000" />
+          <Property Name="TechSupport1" Type="int" Nullable="false" />
+          <Property Name="TechSupport2" Type="int" />
+          <Property Name="ClientContact1" Type="int" />
+          <Property Name="ClientContact2" Type="int" />
+          <Property Name="DevOps_Link_En" Type="nvarchar" MaxLength="500" />
+          <Property Name="DevOps_Link_Fr" Type="nvarchar" MaxLength="500" />
+          <Property Name="Technical_Doc_Link" Type="nvarchar" MaxLength="500" />
+          <Property Name="Note" Type="nvarchar" MaxLength="4000" />
+          <Property Name="Last_Updated" Type="datetime" />
+          <Property Name="Last_UpdatedBy" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Client_Contact">
+          <Key>
+            <PropertyRef Name="Client_ID" />
+          </Key>
+          <Property Name="Client_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="First_Name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Last_Name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Phone" Type="nchar" MaxLength="12" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DFO_Region">
+          <Key>
+            <PropertyRef Name="Region_ID" />
+          </Key>
+          <Property Name="Region_ID" Type="smallint" Nullable="false" />
+          <Property Name="Region" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="GIS_Environment">
           <Key>
             <PropertyRef Name="Environment_ID" />
@@ -13,7 +52,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
           <Property Name="URL" Type="nvarchar" MaxLength="200" Nullable="false" />
-          <Property Name="Last_Updated" Type="date" />
+          <Property Name="Last_Updated" Type="datetime" />
           <Property Name="Last_UpdatedBy" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="GIS_Server">
@@ -25,13 +64,18 @@
           <Property Name="FQDN" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Zone_ID" Type="smallint" Nullable="false" />
           <Property Name="IP_Address" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Region_ID" Type="smallint" Nullable="false" />
           <Property Name="gis_environment_ID" Type="int" Nullable="false" />
-          <Property Name="OS" Type="smallint" Nullable="false" />
+          <Property Name="OS_ID" Type="smallint" Nullable="false" />
           <Property Name="Diskspace_GB" Type="int" Nullable="false" />
           <Property Name="RAM_GB" Type="smallint" Nullable="false" />
-          <Property Name="CPU" Type="smallint" />
+          <Property Name="CPU" Type="smallint" Nullable="false" />
+          <Property Name="Port_in_Use" Type="nvarchar" MaxLength="50" />
+          <Property Name="SSL_IssuedTo" Type="nvarchar" MaxLength="50" />
+          <Property Name="SSL_IssuedBy" Type="nvarchar" MaxLength="50" />
+          <Property Name="SSL_ExpiryDate" Type="datetime" />
           <Property Name="Note" Type="nvarchar" MaxLength="1000" />
-          <Property Name="Last_Updated" Type="date" />
+          <Property Name="Last_Updated" Type="datetime" />
           <Property Name="Last_Updated_By" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Network_Zone">
@@ -64,7 +108,7 @@
           <Property Name="Software_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name_Version" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Note" Type="nvarchar" MaxLength="500" />
-          <Property Name="Last_Updated" Type="date" />
+          <Property Name="Last_Updated" Type="datetime" />
           <Property Name="Last_UpdatedBy" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -77,6 +121,76 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
+        <EntityType Name="Tech_Support">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="First_Name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Last_Name" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Phone" Type="nchar" MaxLength="12" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Application_Client_Contact">
+          <End Role="Client_Contact" Type="Self.Client_Contact" Multiplicity="0..1" />
+          <End Role="Application" Type="Self.Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client_Contact">
+              <PropertyRef Name="Client_ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="ClientContact1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Application_Client_Contact1">
+          <End Role="Client_Contact" Type="Self.Client_Contact" Multiplicity="0..1" />
+          <End Role="Application" Type="Self.Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client_Contact">
+              <PropertyRef Name="Client_ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="ClientContact2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Application_GIS_Environment">
+          <End Role="GIS_Environment" Type="Self.GIS_Environment" Multiplicity="1" />
+          <End Role="Application" Type="Self.Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GIS_Environment">
+              <PropertyRef Name="Environment_ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="GIS_Environment_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Application_Tech_Support">
+          <End Role="Tech_Support" Type="Self.Tech_Support" Multiplicity="1" />
+          <End Role="Application" Type="Self.Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tech_Support">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="TechSupport1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Application_Tech_Support1">
+          <End Role="Tech_Support" Type="Self.Tech_Support" Multiplicity="0..1" />
+          <End Role="Application" Type="Self.Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tech_Support">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="TechSupport2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_gis_server_OS_List">
           <End Role="OS" Type="Self.OS" Multiplicity="1" />
           <End Role="GIS_Server" Type="Self.GIS_Server" Multiplicity="*" />
@@ -85,7 +199,19 @@
               <PropertyRef Name="OS_ID" />
             </Principal>
             <Dependent Role="GIS_Server">
-              <PropertyRef Name="OS" />
+              <PropertyRef Name="OS_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GIS_Server_Region">
+          <End Role="DFO_Region" Type="Self.DFO_Region" Multiplicity="1" />
+          <End Role="GIS_Server" Type="Self.GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DFO_Region">
+              <PropertyRef Name="Region_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="Region_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -138,6 +264,9 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="IMTS_GISModelStoreContainer">
+          <EntitySet Name="Application" EntityType="Self.Application" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Client_Contact" EntityType="Self.Client_Contact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DFO_Region" EntityType="Self.DFO_Region" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GIS_Environment" EntityType="Self.GIS_Environment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GIS_Server" EntityType="Self.GIS_Server" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Network_Zone" EntityType="Self.Network_Zone" Schema="dbo" store:Type="Tables" />
@@ -145,8 +274,33 @@
           <EntitySet Name="Server_Software" EntityType="Self.Server_Software" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Software" EntityType="Self.Software" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tech_Support" EntityType="Self.Tech_Support" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Application_Client_Contact" Association="Self.FK_Application_Client_Contact">
+            <End Role="Client_Contact" EntitySet="Client_Contact" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Application_Client_Contact1" Association="Self.FK_Application_Client_Contact1">
+            <End Role="Client_Contact" EntitySet="Client_Contact" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Application_GIS_Environment" Association="Self.FK_Application_GIS_Environment">
+            <End Role="GIS_Environment" EntitySet="GIS_Environment" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Application_Tech_Support" Association="Self.FK_Application_Tech_Support">
+            <End Role="Tech_Support" EntitySet="Tech_Support" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Application_Tech_Support1" Association="Self.FK_Application_Tech_Support1">
+            <End Role="Tech_Support" EntitySet="Tech_Support" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
           <AssociationSet Name="FK_gis_server_OS_List" Association="Self.FK_gis_server_OS_List">
             <End Role="OS" EntitySet="OS" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GIS_Server_Region" Association="Self.FK_GIS_Server_Region">
+            <End Role="DFO_Region" EntitySet="DFO_Region" />
             <End Role="GIS_Server" EntitySet="GIS_Server" />
           </AssociationSet>
           <AssociationSet Name="FK_Server_List_and_gis_environment" Association="Self.FK_Server_List_and_gis_environment">
@@ -182,12 +336,23 @@
         </EntityType>
         <EntityContainer Name="IMTS_GISEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <EntitySet Name="Client_Contact" EntityType="IMTS_GISModel.Client_Contact" />
+          <EntitySet Name="DFO_Region" EntityType="IMTS_GISModel.DFO_Region" />
           <EntitySet Name="GIS_Environment" EntityType="IMTS_GISModel.GIS_Environment" />
           <EntitySet Name="GIS_Server" EntityType="IMTS_GISModel.GIS_Server" />
           <EntitySet Name="Network_Zone" EntityType="IMTS_GISModel.Network_Zone" />
-          <EntitySet Name="Softwares" EntityType="IMTS_GISModel.Software" />
+          <EntitySet Name="OS" EntityType="IMTS_GISModel.OS" />
+          <EntitySet Name="Software" EntityType="IMTS_GISModel.Software" />
+          <AssociationSet Name="FK_GIS_Server_Region" Association="IMTS_GISModel.FK_GIS_Server_Region">
+            <End Role="DFO_Region" EntitySet="DFO_Region" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
           <AssociationSet Name="FK_Server_List_and_gis_environment" Association="IMTS_GISModel.FK_Server_List_and_gis_environment">
             <End Role="GIS_Environment" EntitySet="GIS_Environment" />
+            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          </AssociationSet>
+          <AssociationSet Name="FK_gis_server_OS_List" Association="IMTS_GISModel.FK_gis_server_OS_List">
+            <End Role="OS" EntitySet="OS" />
             <End Role="GIS_Server" EntitySet="GIS_Server" />
           </AssociationSet>
           <AssociationSet Name="FK_Server_List_Network_Zone" Association="IMTS_GISModel.FK_Server_List_Network_Zone">
@@ -196,14 +361,51 @@
           </AssociationSet>
           <AssociationSet Name="Server_Software" Association="IMTS_GISModel.Server_Software">
             <End Role="GIS_Server" EntitySet="GIS_Server" />
-            <End Role="Software" EntitySet="Softwares" />
+            <End Role="Software" EntitySet="Software" />
           </AssociationSet>
-          <EntitySet Name="OS" EntityType="IMTS_GISModel.OS" />
-          <AssociationSet Name="FK_gis_server_OS_List" Association="IMTS_GISModel.FK_gis_server_OS_List">
-            <End Role="OS" EntitySet="OS" />
-            <End Role="GIS_Server" EntitySet="GIS_Server" />
+          <EntitySet Name="Tech_Support" EntityType="IMTS_GISModel.Tech_Support" />
+          <EntitySet Name="Application" EntityType="IMTS_GISModel.Application" />
+          <AssociationSet Name="FK_Application_Client_Contact" Association="IMTS_GISModel.FK_Application_Client_Contact">
+            <End Role="Client_Contact" EntitySet="Client_Contact" />
+            <End Role="Application" EntitySet="Application" />
           </AssociationSet>
-        </EntityContainer>
+          <AssociationSet Name="FK_Application_Client_Contact1" Association="IMTS_GISModel.FK_Application_Client_Contact1">
+            <End Role="Client_Contact" EntitySet="Client_Contact" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Application_GIS_Environment" Association="IMTS_GISModel.FK_Application_GIS_Environment">
+            <End Role="GIS_Environment" EntitySet="GIS_Environment" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Application_Tech_Support" Association="IMTS_GISModel.FK_Application_Tech_Support">
+            <End Role="Tech_Support" EntitySet="Tech_Support" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Application_Tech_Support1" Association="IMTS_GISModel.FK_Application_Tech_Support1">
+            <End Role="Tech_Support" EntitySet="Tech_Support" />
+            <End Role="Application" EntitySet="Application" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Client_Contact">
+          <Key>
+            <PropertyRef Name="Client_ID" />
+          </Key>
+          <Property Name="Client_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="First_Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Last_Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Application" Relationship="IMTS_GISModel.FK_Application_Client_Contact" FromRole="Client_Contact" ToRole="Application" />
+          <NavigationProperty Name="Application1" Relationship="IMTS_GISModel.FK_Application_Client_Contact1" FromRole="Client_Contact" ToRole="Application" />
+          <Property Name="Phone" Type="String" MaxLength="12" FixedLength="true" Unicode="true" Nullable="false" />
+          </EntityType>
+        <EntityType Name="DFO_Region">
+          <Key>
+            <PropertyRef Name="Region_ID" />
+          </Key>
+          <Property Name="Region_ID" Type="Int16" Nullable="false" />
+          <Property Name="Region" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.FK_GIS_Server_Region" FromRole="DFO_Region" ToRole="GIS_Server" />
+        </EntityType>
         <EntityType Name="GIS_Environment">
           <Key>
             <PropertyRef Name="Environment_ID" />
@@ -212,9 +414,10 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="URL" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Last_Updated" Type="DateTime" Precision="0" />
+          <Property Name="Last_Updated" Type="DateTime" Precision="3" />
           <Property Name="Last_UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.FK_Server_List_and_gis_environment" FromRole="GIS_Environment" ToRole="GIS_Server" />
+          <NavigationProperty Name="Application" Relationship="IMTS_GISModel.FK_Application_GIS_Environment" FromRole="GIS_Environment" ToRole="Application" />
         </EntityType>
         <EntityType Name="GIS_Server">
           <Key>
@@ -225,18 +428,24 @@
           <Property Name="FQDN" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Zone_ID" Type="Int16" Nullable="false" />
           <Property Name="IP_Address" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Region_ID" Type="Int16" Nullable="false" />
           <Property Name="gis_environment_ID" Type="Int32" Nullable="false" />
-          <Property Name="OS" Type="Int16" Nullable="false" />
+          <Property Name="OS_ID" Type="Int16" Nullable="false" />
           <Property Name="Diskspace_GB" Type="Int32" Nullable="false" />
           <Property Name="RAM_GB" Type="Int16" Nullable="false" />
-          <Property Name="CPU" Type="Int16" />
+          <Property Name="CPU" Type="Int16" Nullable="false" />
+          <Property Name="SSL_IssuedTo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SSL_IssuedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SSL_ExpiryDate" Type="DateTime" Precision="3" />
           <Property Name="Note" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
-          <Property Name="Last_Updated" Type="DateTime" Precision="0" />
+          <Property Name="Last_Updated" Type="DateTime" Precision="3" />
           <Property Name="Last_Updated_By" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DFO_Region" Relationship="IMTS_GISModel.FK_GIS_Server_Region" FromRole="GIS_Server" ToRole="DFO_Region" />
           <NavigationProperty Name="GIS_Environment" Relationship="IMTS_GISModel.FK_Server_List_and_gis_environment" FromRole="GIS_Server" ToRole="GIS_Environment" />
+          <NavigationProperty Name="OS" Relationship="IMTS_GISModel.FK_gis_server_OS_List" FromRole="GIS_Server" ToRole="OS" />
           <NavigationProperty Name="Network_Zone" Relationship="IMTS_GISModel.FK_Server_List_Network_Zone" FromRole="GIS_Server" ToRole="Network_Zone" />
-          <NavigationProperty Name="Softwares" Relationship="IMTS_GISModel.Server_Software" FromRole="GIS_Server" ToRole="Software" />
-          <NavigationProperty Name="OS1" Relationship="IMTS_GISModel.FK_gis_server_OS_List" FromRole="GIS_Server" ToRole="OS" />
+          <NavigationProperty Name="Software" Relationship="IMTS_GISModel.Server_Software" FromRole="GIS_Server" ToRole="Software" />
+          <Property Name="Port_in_Use" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Network_Zone">
           <Key>
@@ -247,6 +456,14 @@
           <Property Name="Note" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.FK_Server_List_Network_Zone" FromRole="Network_Zone" ToRole="GIS_Server" />
         </EntityType>
+        <EntityType Name="OS">
+          <Key>
+            <PropertyRef Name="OS_ID" />
+          </Key>
+          <Property Name="OS_ID" Type="Int16" Nullable="false" />
+          <Property Name="OS_Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.FK_gis_server_OS_List" FromRole="OS" ToRole="GIS_Server" />
+        </EntityType>
         <EntityType Name="Software">
           <Key>
             <PropertyRef Name="Software_ID" />
@@ -254,10 +471,22 @@
           <Property Name="Software_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name_Version" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Note" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="Last_Updated" Type="DateTime" Precision="0" />
+          <Property Name="Last_Updated" Type="DateTime" Precision="3" />
           <Property Name="Last_UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.Server_Software" FromRole="Software" ToRole="GIS_Server" />
         </EntityType>
+        <Association Name="FK_GIS_Server_Region">
+          <End Type="IMTS_GISModel.DFO_Region" Role="DFO_Region" Multiplicity="1" />
+          <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DFO_Region">
+              <PropertyRef Name="Region_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="Region_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Server_List_and_gis_environment">
           <End Type="IMTS_GISModel.GIS_Environment" Role="GIS_Environment" Multiplicity="1" />
           <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
@@ -267,6 +496,18 @@
             </Principal>
             <Dependent Role="GIS_Server">
               <PropertyRef Name="gis_environment_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_gis_server_OS_List">
+          <End Type="IMTS_GISModel.OS" Role="OS" Multiplicity="1" />
+          <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OS">
+              <PropertyRef Name="OS_ID" />
+            </Principal>
+            <Dependent Role="GIS_Server">
+              <PropertyRef Name="OS_ID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -286,27 +527,106 @@
           <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
           <End Type="IMTS_GISModel.Software" Role="Software" Multiplicity="*" />
         </Association>
-        <EntityType Name="OS">
+        <EntityType Name="Tech_Support">
           <Key>
-            <PropertyRef Name="OS_ID" />
+            <PropertyRef Name="ID" />
           </Key>
-          <Property Name="OS_ID" Type="Int16" Nullable="false" />
-          <Property Name="OS_Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="GIS_Server" Relationship="IMTS_GISModel.FK_gis_server_OS_List" FromRole="OS" ToRole="GIS_Server" />
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="First_Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Last_Name" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Application" Relationship="IMTS_GISModel.FK_Application_Tech_Support" FromRole="Tech_Support" ToRole="Application" />
+          <NavigationProperty Name="Application1" Relationship="IMTS_GISModel.FK_Application_Tech_Support1" FromRole="Tech_Support" ToRole="Application" />
+          <Property Name="Phone" Type="String" MaxLength="12" FixedLength="true" Unicode="true" Nullable="false" />
+          </EntityType>
+        <EntityType Name="Application">
+          <Key>
+            <PropertyRef Name="App_ID" />
+          </Key>
+          <Property Name="App_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="APM_ID" Type="Int32" />
+          <Property Name="GIS_Environment_ID" Type="Int32" Nullable="false" />
+          <Property Name="URL_En" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="URL_Fr" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="TechSupport1" Type="Int32" Nullable="false" />
+          <Property Name="TechSupport2" Type="Int32" />
+          <Property Name="ClientContact1" Type="Int32" />
+          <Property Name="ClientContact2" Type="Int32" />
+          <Property Name="DevOps_Link_En" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="DevOps_Link_Fr" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Technical_Doc_Link" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="Last_Updated" Type="DateTime" Precision="3" />
+          <Property Name="Last_UpdatedBy" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Client_Contact" Relationship="IMTS_GISModel.FK_Application_Client_Contact" FromRole="Application" ToRole="Client_Contact" />
+          <NavigationProperty Name="Client_Contact1" Relationship="IMTS_GISModel.FK_Application_Client_Contact1" FromRole="Application" ToRole="Client_Contact" />
+          <NavigationProperty Name="GIS_Environment" Relationship="IMTS_GISModel.FK_Application_GIS_Environment" FromRole="Application" ToRole="GIS_Environment" />
+          <NavigationProperty Name="Tech_Support" Relationship="IMTS_GISModel.FK_Application_Tech_Support" FromRole="Application" ToRole="Tech_Support" />
+          <NavigationProperty Name="Tech_Support1" Relationship="IMTS_GISModel.FK_Application_Tech_Support1" FromRole="Application" ToRole="Tech_Support" />
         </EntityType>
-        <Association Name="FK_gis_server_OS_List">
-          <End Type="IMTS_GISModel.OS" Role="OS" Multiplicity="1" />
-          <End Type="IMTS_GISModel.GIS_Server" Role="GIS_Server" Multiplicity="*" />
+        <Association Name="FK_Application_Client_Contact">
+          <End Type="IMTS_GISModel.Client_Contact" Role="Client_Contact" Multiplicity="0..1" />
+          <End Type="IMTS_GISModel.Application" Role="Application" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="OS">
-              <PropertyRef Name="OS_ID" />
+            <Principal Role="Client_Contact">
+              <PropertyRef Name="Client_ID" />
             </Principal>
-            <Dependent Role="GIS_Server">
-              <PropertyRef Name="OS" />
+            <Dependent Role="Application">
+              <PropertyRef Name="ClientContact1" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK_Application_Client_Contact1">
+          <End Type="IMTS_GISModel.Client_Contact" Role="Client_Contact" Multiplicity="0..1" />
+          <End Type="IMTS_GISModel.Application" Role="Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client_Contact">
+              <PropertyRef Name="Client_ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="ClientContact2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Application_GIS_Environment">
+          <End Type="IMTS_GISModel.GIS_Environment" Role="GIS_Environment" Multiplicity="1" />
+          <End Type="IMTS_GISModel.Application" Role="Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GIS_Environment">
+              <PropertyRef Name="Environment_ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="GIS_Environment_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Application_Tech_Support">
+          <End Type="IMTS_GISModel.Tech_Support" Role="Tech_Support" Multiplicity="1" />
+          <End Type="IMTS_GISModel.Application" Role="Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tech_Support">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="TechSupport1" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Application_Tech_Support1">
+          <End Type="IMTS_GISModel.Tech_Support" Role="Tech_Support" Multiplicity="0..1" />
+          <End Type="IMTS_GISModel.Application" Role="Application" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tech_Support">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Application">
+              <PropertyRef Name="TechSupport2" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -320,6 +640,25 @@
                 <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
                 <ScalarProperty Name="version" ColumnName="version" />
                 <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Client_Contact">
+            <EntityTypeMapping TypeName="IMTS_GISModel.Client_Contact">
+              <MappingFragment StoreEntitySet="Client_Contact">
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+                <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+                <ScalarProperty Name="Client_ID" ColumnName="Client_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DFO_Region">
+            <EntityTypeMapping TypeName="IMTS_GISModel.DFO_Region">
+              <MappingFragment StoreEntitySet="DFO_Region">
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="Region_ID" ColumnName="Region_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -338,14 +677,19 @@
           <EntitySetMapping Name="GIS_Server">
             <EntityTypeMapping TypeName="IMTS_GISModel.GIS_Server">
               <MappingFragment StoreEntitySet="GIS_Server">
+                <ScalarProperty Name="Port_in_Use" ColumnName="Port_in_Use" />
                 <ScalarProperty Name="Last_Updated_By" ColumnName="Last_Updated_By" />
                 <ScalarProperty Name="Last_Updated" ColumnName="Last_Updated" />
                 <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="SSL_ExpiryDate" ColumnName="SSL_ExpiryDate" />
+                <ScalarProperty Name="SSL_IssuedBy" ColumnName="SSL_IssuedBy" />
+                <ScalarProperty Name="SSL_IssuedTo" ColumnName="SSL_IssuedTo" />
                 <ScalarProperty Name="CPU" ColumnName="CPU" />
                 <ScalarProperty Name="RAM_GB" ColumnName="RAM_GB" />
                 <ScalarProperty Name="Diskspace_GB" ColumnName="Diskspace_GB" />
-                <ScalarProperty Name="OS" ColumnName="OS" />
+                <ScalarProperty Name="OS_ID" ColumnName="OS_ID" />
                 <ScalarProperty Name="gis_environment_ID" ColumnName="gis_environment_ID" />
+                <ScalarProperty Name="Region_ID" ColumnName="Region_ID" />
                 <ScalarProperty Name="IP_Address" ColumnName="IP_Address" />
                 <ScalarProperty Name="Zone_ID" ColumnName="Zone_ID" />
                 <ScalarProperty Name="FQDN" ColumnName="FQDN" />
@@ -363,7 +707,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Softwares">
+          <EntitySetMapping Name="OS">
+            <EntityTypeMapping TypeName="IMTS_GISModel.OS">
+              <MappingFragment StoreEntitySet="OS">
+                <ScalarProperty Name="OS_Name" ColumnName="OS_Name" />
+                <ScalarProperty Name="OS_ID" ColumnName="OS_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Software">
             <EntityTypeMapping TypeName="IMTS_GISModel.Software">
               <MappingFragment StoreEntitySet="Software">
                 <ScalarProperty Name="Last_UpdatedBy" ColumnName="Last_UpdatedBy" />
@@ -382,11 +734,37 @@
               <ScalarProperty Name="Server_ID" ColumnName="Server_ID" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="OS">
-            <EntityTypeMapping TypeName="IMTS_GISModel.OS">
-              <MappingFragment StoreEntitySet="OS">
-                <ScalarProperty Name="OS_Name" ColumnName="OS_Name" />
-                <ScalarProperty Name="OS_ID" ColumnName="OS_ID" />
+          <EntitySetMapping Name="Tech_Support">
+            <EntityTypeMapping TypeName="IMTS_GISModel.Tech_Support">
+              <MappingFragment StoreEntitySet="Tech_Support">
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Last_Name" ColumnName="Last_Name" />
+                <ScalarProperty Name="First_Name" ColumnName="First_Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Application">
+            <EntityTypeMapping TypeName="IMTS_GISModel.Application">
+              <MappingFragment StoreEntitySet="Application">
+                <ScalarProperty Name="Last_UpdatedBy" ColumnName="Last_UpdatedBy" />
+                <ScalarProperty Name="Last_Updated" ColumnName="Last_Updated" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Technical_Doc_Link" ColumnName="Technical_Doc_Link" />
+                <ScalarProperty Name="DevOps_Link_Fr" ColumnName="DevOps_Link_Fr" />
+                <ScalarProperty Name="DevOps_Link_En" ColumnName="DevOps_Link_En" />
+                <ScalarProperty Name="ClientContact2" ColumnName="ClientContact2" />
+                <ScalarProperty Name="ClientContact1" ColumnName="ClientContact1" />
+                <ScalarProperty Name="TechSupport2" ColumnName="TechSupport2" />
+                <ScalarProperty Name="TechSupport1" ColumnName="TechSupport1" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="URL_Fr" ColumnName="URL_Fr" />
+                <ScalarProperty Name="URL_En" ColumnName="URL_En" />
+                <ScalarProperty Name="GIS_Environment_ID" ColumnName="GIS_Environment_ID" />
+                <ScalarProperty Name="APM_ID" ColumnName="APM_ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="App_ID" ColumnName="App_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

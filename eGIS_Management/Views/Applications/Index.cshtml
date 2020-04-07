@@ -1,0 +1,122 @@
+﻿@model IEnumerable<eGIS_Management.Models.Application>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New Application", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.Raw("APM ID")
+        </th>
+        <th>
+
+            @Html.Raw("GIS Env")
+        </th>
+        <th>
+            @Html.Raw("URL (En)")
+        </th>
+        <th>
+            @Html.Raw("URL (Fr)")
+        </th>
+
+        <th>
+
+            @Html.Raw("DevOps (En)")
+        </th>
+        <th>
+            @Html.Raw("DevOps (Fr)")
+        </th>
+
+        <th>
+
+            @Html.Raw("Primary Client Contact")
+        </th>
+
+
+
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.APM_ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GIS_Environment.Name)
+        </td>
+        <td>
+            @Html.Raw("<a href=\"" + item.URL_En + "\"> " + "Click here" + " </a>")
+        </td>
+        <td>
+
+            @Html.Raw("<a href=\"" + item.URL_Fr + "\"> " + "Click here" + " </a>")
+        </td>
+
+        <td>
+            @if (item.DevOps_Link_En != null)
+            {
+                @Html.Raw("<a href=\"" + item.DevOps_Link_En + "\"> " + "Click here" + " </a>")
+            }
+            else
+            {
+                @Html.Raw("N/A")
+            }
+          
+        </td>
+        <td>
+            @if (item.DevOps_Link_Fr != null)
+            {
+                @Html.Raw("<a href=\"" + item.DevOps_Link_Fr + "\"> " + "Click here" + " </a>")
+            }
+            else
+            {
+                @Html.Raw("N/A")
+            }
+           
+        </td>
+
+
+        <td>
+            @Html.DisplayFor(modelItem => item.Client_Contact.Email)
+        </td>
+
+
+      
+
+        <td>
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin") | User.IsInRole("Editor"))
+                {
+                    @Html.ActionLink("Edit |", "Edit", new { id = item.App_ID })
+                }
+            }
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("Delete |", "Delete", new { id = item.App_ID })
+                }
+            }
+
+            @Html.ActionLink("Details", "Details", new { id = item.App_ID }) 
+
+        </td>
+    </tr>
+}
+
+</table>

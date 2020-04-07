@@ -1,0 +1,145 @@
+﻿@model eGIS_Management.Models.Application
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Application</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.APM_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.APM_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URL_En)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URL_En)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URL_Fr)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URL_Fr)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DevOps_Link)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DevOps_Link)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Technical_Doc_Link)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Technical_Doc_Link)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Note)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Last_Updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Last_Updated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Last_UpdatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Last_UpdatedBy)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Client_Contact.First_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client_Contact.First_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Client_Contact1.First_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client_Contact1.First_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GIS_Environment.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GIS_Environment.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tech_Support.First_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tech_Support.First_Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tech_Support1.First_Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tech_Support1.First_Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

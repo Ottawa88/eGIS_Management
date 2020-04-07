@@ -1,0 +1,148 @@
+﻿@model eGIS_Management.Models.Application
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Application</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+
+            @Html.Raw("APM ID")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.APM_ID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GIS_Environment.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GIS_Environment.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URL_En)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URL_En)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.URL_Fr)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.URL_Fr)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DevOps_Link_En)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DevOps_Link_En)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DevOps_Link_Fr)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DevOps_Link_Fr)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Technical_Doc_Link)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Technical_Doc_Link)
+        </dd>
+
+
+
+        <dt>
+            @Html.Raw("Primary Client Contact")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client_Contact.Email)
+        </dd>
+
+        <dt>
+            @Html.Raw("Secondary Client Contact")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Client_Contact1.Email)
+        </dd>
+
+
+
+        <dt>
+            @Html.Raw("Primary Tech Support")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tech_Support.Email)
+        </dd>
+
+        <dt>
+            @Html.Raw("Secondary Tech Support")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Tech_Support1.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Note)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Note)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Last_Updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Last_Updated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Last_UpdatedBy)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Last_UpdatedBy)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.App_ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

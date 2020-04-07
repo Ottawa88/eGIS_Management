@@ -12,25 +12,18 @@ namespace eGIS_Management.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class GIS_Environment
+    public partial class DFO_Region
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public GIS_Environment()
+        public DFO_Region()
         {
             this.GIS_Server = new HashSet<GIS_Server>();
-            this.Application = new HashSet<Application>();
         }
     
-        public int Environment_ID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string URL { get; set; }
-        public Nullable<System.DateTime> Last_Updated { get; set; }
-        public string Last_UpdatedBy { get; set; }
+        public short Region_ID { get; set; }
+        public string Region { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GIS_Server> GIS_Server { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Application> Application { get; set; }
     }
 }

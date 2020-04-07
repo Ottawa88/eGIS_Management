@@ -12,25 +12,24 @@ namespace eGIS_Management.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class GIS_Environment
+    public partial class Client_Contact
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public GIS_Environment()
+        public Client_Contact()
         {
-            this.GIS_Server = new HashSet<GIS_Server>();
             this.Application = new HashSet<Application>();
+            this.Application1 = new HashSet<Application>();
         }
     
-        public int Environment_ID { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string URL { get; set; }
-        public Nullable<System.DateTime> Last_Updated { get; set; }
-        public string Last_UpdatedBy { get; set; }
+        public int Client_ID { get; set; }
+        public string First_Name { get; set; }
+        public string Last_Name { get; set; }
+        public string Email { get; set; }
+        public string Phone { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<GIS_Server> GIS_Server { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Application> Application { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Application> Application1 { get; set; }
     }
 }

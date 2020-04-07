@@ -1,0 +1,52 @@
+﻿@model IEnumerable<eGIS_Management.Models.Software>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name_Version)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Note)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Last_Updated)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Last_UpdatedBy)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name_Version)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Note)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Last_Updated)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Last_UpdatedBy)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Software_ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Software_ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Software_ID })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,11 +1,11 @@
-﻿@model eGIS_Management.Models.GIS_Server
+﻿@model eGIS_Management.Models.Tech_Support
 
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Edit GIS Server</h2>
+<h2>Edit Tech Support</h2>
 
 
 @using (Html.BeginForm())
@@ -13,14 +13,15 @@
     @Html.AntiForgeryToken()
     
 <div class="form-horizontal">
-  
+ 
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.HiddenFor(model => model.Server_ID)
+    @Html.HiddenFor(model => model.ID)
 
-    @Html.Partial("GIS_ServerPartial")
+    @Html.Partial("Tech_Support_Partial")
+
     <div class="form-group">
-        <div class="col-md-offset-2 col-md-9">
+        <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Save" class="btn btn-default" />
         </div>
     </div>

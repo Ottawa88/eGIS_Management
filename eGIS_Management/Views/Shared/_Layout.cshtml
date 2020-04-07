@@ -42,16 +42,20 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    
+
                     @if (User.Identity.IsAuthenticated)
                     {
                         if (User.IsInRole("Admin") | User.IsInRole("Editor"))
                         {
-                            <li>@Html.ActionLink("FGP Metadata", "Index", "FGP")</li>
+                            <li>@Html.ActionLink("Software", "Index", "Software")</li>
+                            <li>@Html.ActionLink("Tech Support", "Index", "Tech_Support")</li>
+                            <li>@Html.ActionLink("Client Contact", "Index", "Client_Contact")</li>
+
                         }
                     }
-                    
-                    <li>@Html.ActionLink("GIS Servers", "Index", "Server")</li>
+
+                    <li>@Html.ActionLink("Server", "Index", "Server")</li>
+                    <li>@Html.ActionLink("Applications", "Index", "Applications")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                 </ul>
