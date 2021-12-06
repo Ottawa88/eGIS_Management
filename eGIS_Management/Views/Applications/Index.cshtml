@@ -1,4 +1,6 @@
-﻿@model IEnumerable<eGIS_Management.Models.Application>
+﻿@model PagedList.IPagedList<eGIS_Management.Models.Application>
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 
 @{
     ViewBag.Title = "Index";
@@ -8,19 +10,42 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New Application", "Create")
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("Editor") || User.IsInRole("Admin"))
+        {
+            @Html.ActionLink("Create New Application", "Create")
+        }
+    }
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.Raw("APM ID")
+
+            @Html.ActionLink("Name", "Index", new { sortOrder = ViewBag.NameSortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
         <th>
 
-            @Html.Raw("GIS Env")
+            @Html.ActionLink("APM_ID", "Index", new { sortOrder = ViewBag.APMSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+
+            @Html.ActionLink("GIS Env", "Index", new { sortOrder = ViewBag.EnvironmentSortParm, currentFilter = ViewBag.CurrentFilter })
+
+
+        </th>
+        <th>
+
+            @Html.ActionLink("Type", "Index", new { sortOrder = ViewBag.TypeSortParm, currentFilter = ViewBag.CurrentFilter })
+
+
+        </th>
+        <th>
+
+            @Html.ActionLink("Region", "Index", new { sortOrder = ViewBag.DFORegionSortParm, currentFilter = ViewBag.CurrentFilter })
+
+
         </th>
         <th>
             @Html.Raw("URL (En)")
@@ -29,17 +54,15 @@
             @Html.Raw("URL (Fr)")
         </th>
 
+
         <th>
 
-            @Html.Raw("DevOps (En)")
-        </th>
-        <th>
-            @Html.Raw("DevOps (Fr)")
+            @Html.ActionLink("Primary Tech Support", "Index", new { sortOrder = ViewBag.TechSupport1SortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
 
         <th>
 
-            @Html.Raw("Primary Client Contact")
+            @Html.ActionLink("Primary Client Contact", "Index", new { sortOrder = ViewBag.ClientContact1SortParm, currentFilter = ViewBag.CurrentFilter })
         </th>
 
 
@@ -47,7 +70,8 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
@@ -59,6 +83,12 @@
             @Html.DisplayFor(modelItem => item.GIS_Environment.Name)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.ApplicationType.TypeName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DFO_Region.Region)
+        </td>
+        <td>
             @Html.Raw("<a href=\"" + item.URL_En + "\"> " + "Click here" + " </a>")
         </td>
         <td>
@@ -67,35 +97,15 @@
         </td>
 
         <td>
-            @if (item.DevOps_Link_En != null)
-            {
-                @Html.Raw("<a href=\"" + item.DevOps_Link_En + "\"> " + "Click here" + " </a>")
-            }
-            else
-            {
-                @Html.Raw("N/A")
-            }
-          
+            @Html.DisplayFor(modelItem => item.Tech_Support.Email)
         </td>
-        <td>
-            @if (item.DevOps_Link_Fr != null)
-            {
-                @Html.Raw("<a href=\"" + item.DevOps_Link_Fr + "\"> " + "Click here" + " </a>")
-            }
-            else
-            {
-                @Html.Raw("N/A")
-            }
-           
-        </td>
-
 
         <td>
             @Html.DisplayFor(modelItem => item.Client_Contact.Email)
         </td>
 
 
-      
+
 
         <td>
             @if (User.Identity.IsAuthenticated)
@@ -113,10 +123,16 @@
                 }
             }
 
-            @Html.ActionLink("Details", "Details", new { id = item.App_ID }) 
+            @Html.ActionLink("Details", "Details", new { id = item.App_ID })
 
         </td>
     </tr>
-}
+    }
 
 </table>
+<br />
+  Total <b>@ViewBag.TotalCount </b> records.        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+

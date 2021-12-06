@@ -178,8 +178,10 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ApplicationsController.cs" />
     <Compile Include="Controllers\Client_ContactController.cs" />
+    <Compile Include="Controllers\GIS_EnvironmentController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\NetworkSharesController.cs" />
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\SoftwareController.cs" />
     <Compile Include="Controllers\Tech_SupportController.cs" />
@@ -188,6 +190,9 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Application.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ApplicationType.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Application_Custom.cs" />
@@ -227,10 +232,16 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\GIS_Server_Validation.cs" />
+    <Compile Include="Models\NetworkShare.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Network_Zone.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OS.cs">
+      <DependentUpon>DataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RegionSectors.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Software.cs">
@@ -244,6 +255,9 @@
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tech_Support_Custom.cs" />
+    <Compile Include="Models\ViewModels\GIS_EnvironmentIndexData.cs" />
+    <Compile Include="Models\ViewModels\GIS_ServerIndexData.cs" />
+    <Compile Include="Models\ViewModels\ServerInstalledSoftwareData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -275,6 +289,7 @@
     <Content Include="Models\DataModel.edmx.diagram">
       <DependentUpon>DataModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -346,9 +361,22 @@
     <Content Include="Views\Applications\ApplicationPartial.cshtml" />
     <Content Include="Views\Tech_Support\Tech_Support_Partial.cshtml" />
     <Content Include="Views\Client_Contact\Client_Contact_Partial.cshtml" />
+    <Content Include="Views\GIS_Environment\Create.cshtml" />
+    <Content Include="Views\GIS_Environment\Delete.cshtml" />
+    <Content Include="Views\GIS_Environment\Details.cshtml" />
+    <Content Include="Views\GIS_Environment\Edit.cshtml" />
+    <Content Include="Views\GIS_Environment\Index.cshtml" />
+    <Content Include="Views\Software\SoftwarePartial.cshtml" />
+    <Content Include="Views\GIS_Environment\EnvPartialView.cshtml" />
+    <Content Include="Views\NetworkShares\Create.cshtml" />
+    <Content Include="Views\NetworkShares\Delete.cshtml" />
+    <Content Include="Views\NetworkShares\Details.cshtml" />
+    <Content Include="Views\NetworkShares\Edit.cshtml" />
+    <Content Include="Views\NetworkShares\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Data_Content\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -384,7 +412,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>63048</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:63048/</IISUrl>
+          <IISUrl>http://localhost:61879/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

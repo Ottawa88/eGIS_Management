@@ -1,0 +1,52 @@
+﻿@model eGIS_Management.Models.NetworkShare
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>NetworkShare</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.Raw("Share Name")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShareName)
+        </dd>
+
+        <dt>
+            @Html.Raw("Network Path")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Network_Path)
+        </dd>
+        <dt>
+            @Html.Raw("Server Name")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GIS_Server.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -28,12 +28,32 @@
             @Html.DisplayFor(model => model.APM_ID)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.GIS_Environment.Name)
+            @Html.Raw("GIS Environment")
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.GIS_Environment.Name)
         </dd>
+        <dt>
+            @Html.Raw("Application Type")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApplicationType.TypeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RegionID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DFO_Region.Region)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SectorID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RegionSectors.SectorName)
+        </dd>
+
 
         <dt>
             @Html.DisplayNameFor(model => model.URL_En)
@@ -66,13 +86,7 @@
         <dd>
             @Html.DisplayFor(model => model.DevOps_Link_En)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DevOps_Link_Fr)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.DevOps_Link_Fr)
-        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.Technical_Doc_Link)

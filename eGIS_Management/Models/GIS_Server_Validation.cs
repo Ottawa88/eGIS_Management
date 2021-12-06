@@ -30,6 +30,8 @@ namespace eGIS_Management.Models
         public string Port_in_Use { get; set; }
 
         [Required]
+        [RegularExpression(@"^([\d]{1,3}\.){3}[\d]{1,3}$")]
+         
         [StringLength(50)]
         [Display(Name = "Server IP Address")]
         public string IP_Address { get; set; }

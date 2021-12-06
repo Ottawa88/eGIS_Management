@@ -18,6 +18,7 @@ namespace eGIS_Management.Models
         public GIS_Server()
         {
             this.Software = new HashSet<Software>();
+            this.NetworkShare = new HashSet<NetworkShare>();
         }
     
         public int Server_ID { get; set; }
@@ -38,12 +39,15 @@ namespace eGIS_Management.Models
         public Nullable<System.DateTime> Last_Updated { get; set; }
         public string Last_Updated_By { get; set; }
         public string Port_in_Use { get; set; }
+        public string Firewall_Rules { get; set; }
     
         public virtual DFO_Region DFO_Region { get; set; }
-        public virtual GIS_Environment GIS_Environment { get; set; }
         public virtual OS OS { get; set; }
         public virtual Network_Zone Network_Zone { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Software> Software { get; set; }
+        public virtual GIS_Environment GIS_Environment { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<NetworkShare> NetworkShare { get; set; }
     }
 }

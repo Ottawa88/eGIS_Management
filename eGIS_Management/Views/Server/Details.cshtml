@@ -8,7 +8,7 @@
 <h2>GIS Server Detail</h2>
 
 <div>
-    
+
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -110,11 +110,18 @@
         </dd>
         <dt>
         <dt>
-            @Html.Raw("SSL Certificate Valid to")
+            @Html.Raw("SSL Certificate Expiry Date")
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.SSL_ExpiryDate)
+        </dd>
+        <dt>
+            @Html.Raw("Firewall Rules")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Firewall_Rules)
         </dd>
 
         <dt>
@@ -145,6 +152,66 @@
 
     </dl>
 </div>
+<h3>
+    Software Installed on the Server
+</h3>
+<table class="table">
+    <tr>
+        <th>
+            Software
+        </th>
+        <th>
+            Note
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model.Software)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name_Version)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note)
+            </td>
+
+        </tr>
+    }
+</table>
+<h3>
+    Network Shares on the Server
+</h3>
+<table class="table">
+    <tr>
+        <th>
+            Share Name
+        </th>
+        <th>
+            Network Path
+        </th>
+        <th>
+            Description
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model.NetworkShare)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShareName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Network_Path)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+
+    </tr>
+    }
+</table>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Server_ID }) |
     @Html.ActionLink("Back to List", "Index")

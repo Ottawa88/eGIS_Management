@@ -8,7 +8,14 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("Editor") | User.IsInRole("Admin"))
+        {
+            @Html.ActionLink("Create New", "Create")
+        }
+    }
 </p>
 <table class="table">
     <tr>
@@ -42,9 +49,24 @@
             @Html.DisplayFor(modelItem => item.Last_UpdatedBy)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Software_ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Software_ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Software_ID })
+          
+
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin") | User.IsInRole("Editor"))
+                {
+                    @Html.ActionLink("Edit |", "Edit", new { id = item.Software_ID })
+                }
+            }
+            @if (User.Identity.IsAuthenticated)
+            {
+                if (User.IsInRole("Admin"))
+                {
+                    @Html.ActionLink("Delete |", "Delete", new { id = item.Software_ID })
+                }
+            }
+            @Html.ActionLink("Details", "Details", new { id = item.Software_ID })
         </td>
     </tr>
 }

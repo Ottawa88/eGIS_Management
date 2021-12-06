@@ -11,6 +11,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using eGIS_Management.Models;
+using System.Net;
+using System.Net.Mail;
 
 namespace eGIS_Management
 {
@@ -19,7 +21,34 @@ namespace eGIS_Management
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
+            SendEmail(message);
             return Task.FromResult(0);
+        }
+        void SendEmail(IdentityMessage message)
+        {
+
+            var mess = new MailMessage();
+
+            string fromEmail = System.Configuration.ConfigurationManager.AppSettings["Generic_EmailAccount"];
+            string password = System.Configuration.ConfigurationManager.AppSettings["Generic_EmailAccount_Password"];
+            var senderEmail = new MailAddress(fromEmail, "IMTS_FGP");
+
+            mess.From = senderEmail;
+            mess.To.Add(new MailAddress(message.Destination));
+            mess.Subject = message.Subject;
+            mess.Body = message.Body;
+            mess.IsBodyHtml = true;
+
+            //smtp server  
+            var smtpClient = new SmtpClient(System.Configuration.ConfigurationManager.AppSettings["SMTP_Client"]);
+
+            smtpClient.Port = int.Parse(System.Configuration.ConfigurationManager.AppSettings["SMTP_Client_Port"]);
+            smtpClient.EnableSsl = false;
+            smtpClient.Credentials = new NetworkCredential(senderEmail.Address, password);
+
+
+            smtpClient.Send(mess);
+
         }
     }
 
@@ -54,7 +83,7 @@ namespace eGIS_Management
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
+                RequireNonLetterOrDigit = false,
                 RequireDigit = true,
                 RequireLowercase = true,
                 RequireUppercase = true,

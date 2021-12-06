@@ -26,7 +26,7 @@ namespace eGIS_Management.Models
         [Display(Name = "Application URL (En)")]
         public string URL_En { get; set; }
 
-        [Required]
+      
         [StringLength(500)]
         [Display(Name = "Application URL (Fr)")]
         public string URL_Fr { get; set; }
@@ -52,9 +52,6 @@ namespace eGIS_Management.Models
         [Display(Name = "DevOps link (En)")]
         public string DevOps_Link_En { get; set; }
 
-        [StringLength(500)]
-        [Display(Name = "DevOps link (Fr)")]
-        public string DevOps_Link_Fr { get; set; }
 
         [StringLength(500)]
         [Display(Name = "Technical Document Link")]
@@ -62,5 +59,18 @@ namespace eGIS_Management.Models
 
         [StringLength(4000)]
         public string Note { get; set; }
+
+        [Required]
+        [Display(Name = "Application Type")]
+        public int TypeID{ get; set; }
+
+        [Required]
+        [Display(Name = "DFO  Region")]
+        public int RegionID { get; set; }
+
+        [Required]
+        [Display(Name = "Region Sector")]
+        public int SectorID { get; set; }
+
     }
 }

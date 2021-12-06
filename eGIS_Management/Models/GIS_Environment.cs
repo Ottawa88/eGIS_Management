@@ -25,6 +25,7 @@ namespace eGIS_Management.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string URL { get; set; }
+        public string Diagram_Name { get; set; }
         public Nullable<System.DateTime> Last_Updated { get; set; }
         public string Last_UpdatedBy { get; set; }
     

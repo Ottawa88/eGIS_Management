@@ -7,23 +7,30 @@
       <Diagram DiagramId="9ec79329c5394ab4992f57f392a8face" Name="Diagram1" ZoomLevel="86">
         <EntityTypeShape EntityType="IMTS_GISModel.Client_Contact" Width="1.5" PointX="0.5" PointY="4.375" />
         <EntityTypeShape EntityType="IMTS_GISModel.DFO_Region" Width="1.5" PointX="10.125" PointY="7.875" />
-        <EntityTypeShape EntityType="IMTS_GISModel.GIS_Environment" Width="1.5" PointX="4.75" PointY="4.25" />
         <EntityTypeShape EntityType="IMTS_GISModel.GIS_Server" Width="1.5" PointX="7.75" PointY="3.75" />
         <EntityTypeShape EntityType="IMTS_GISModel.Network_Zone" Width="1.5" PointX="4.75" PointY="7.5" />
-        <EntityTypeShape EntityType="IMTS_GISModel.OS" Width="1.5" PointX="10" PointY="3" />
+        <EntityTypeShape EntityType="IMTS_GISModel.OS" Width="1.5" PointX="10" PointY="3.25" />
         <EntityTypeShape EntityType="IMTS_GISModel.Software" Width="1.5" PointX="10.125" PointY="5.25" />
         <AssociationConnector Association="IMTS_GISModel.FK_GIS_Server_Region" />
-        <AssociationConnector Association="IMTS_GISModel.FK_Server_List_and_gis_environment" />
         <AssociationConnector Association="IMTS_GISModel.FK_gis_server_OS_List" />
         <AssociationConnector Association="IMTS_GISModel.FK_Server_List_Network_Zone" />
         <AssociationConnector Association="IMTS_GISModel.Server_Software" />
         <EntityTypeShape EntityType="IMTS_GISModel.Tech_Support" Width="1.5" PointX="0.75" PointY="8" />
-        <EntityTypeShape EntityType="IMTS_GISModel.Application" Width="1.5" PointX="2.75" PointY="4.25" />
+        <EntityTypeShape EntityType="IMTS_GISModel.GIS_Environment" Width="1.5" PointX="5.25" PointY="4.375" />
+        <AssociationConnector Association="IMTS_GISModel.FK_Server_List_and_gis_environment" />
+        <EntityTypeShape EntityType="IMTS_GISModel.Application" Width="1.5" PointX="2.875" PointY="3.625" />
         <AssociationConnector Association="IMTS_GISModel.FK_Application_Client_Contact" />
         <AssociationConnector Association="IMTS_GISModel.FK_Application_Client_Contact1" />
         <AssociationConnector Association="IMTS_GISModel.FK_Application_GIS_Environment" />
         <AssociationConnector Association="IMTS_GISModel.FK_Application_Tech_Support" />
         <AssociationConnector Association="IMTS_GISModel.FK_Application_Tech_Support1" />
+        <EntityTypeShape EntityType="IMTS_GISModel.ApplicationType" Width="1.5" PointX="0.75" PointY="1.5" />
+        <EntityTypeShape EntityType="IMTS_GISModel.NetworkShare" Width="1.5" PointX="10.125" PointY="10.625" />
+        <AssociationConnector Association="IMTS_GISModel.FK_Application_ApplicationType" />
+        <AssociationConnector Association="IMTS_GISModel.FK_NetworkShare_GIS_Server" />
+        <EntityTypeShape EntityType="IMTS_GISModel.RegionSectors" Width="1.5" PointX="5.375" PointY="1.5" />
+        <AssociationConnector Association="IMTS_GISModel.FK_Application_DFO_Region" />
+        <AssociationConnector Association="IMTS_GISModel.FK_Application_RegionSectors" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

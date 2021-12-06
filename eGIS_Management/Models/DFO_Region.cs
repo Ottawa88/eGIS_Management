@@ -18,6 +18,7 @@ namespace eGIS_Management.Models
         public DFO_Region()
         {
             this.GIS_Server = new HashSet<GIS_Server>();
+            this.Application = new HashSet<Application>();
         }
     
         public short Region_ID { get; set; }
@@ -25,5 +26,7 @@ namespace eGIS_Management.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<GIS_Server> GIS_Server { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Application> Application { get; set; }
     }
 }

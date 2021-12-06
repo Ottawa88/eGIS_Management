@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using PagedList;
 using eGIS_Management.Models;
+using eGIS_Management.Models.ViewModels;
+using System.Data.Entity.Infrastructure;
 
 namespace eGIS_Management.Controllers
 {
@@ -132,13 +134,16 @@ namespace eGIS_Management.Controllers
         }
 
         // GET: Server/Create
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Create()
         {
             ViewBag.gis_environment_ID = new SelectList(db.GIS_Environment, "Environment_ID", "Name");
             ViewBag.OS_ID = new SelectList(db.OS, "OS_ID", "OS_Name");
             ViewBag.Zone_ID = new SelectList(db.Network_Zone, "Zone_ID", "Name");
             ViewBag.Region_ID = new SelectList(db.DFO_Region, "Region_ID", "Region");
-            return View();
+            GIS_Server server = new GIS_Server();
+            PopulateInstalledSoftwareData(server);
+            return View(server);
         }
 
         // POST: Server/Create
@@ -146,30 +151,65 @@ namespace eGIS_Management.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Server_ID,Name,FQDN,Zone_ID, Port_in_Use,IP_Address,Region_ID,gis_environment_ID,OS_ID,Diskspace_GB,RAM_GB,CPU,SSL_IssuedTo,SSL_IssuedBy,SSL_ExpiryDate,Note,Last_Updated,Last_Updated_By")] GIS_Server gIS_Server)
+        [Authorize(Roles = "Admin,Editor")]
+        public ActionResult Create([Bind(Include = "Server_ID,Name,FQDN,Zone_ID, Port_in_Use,IP_Address,Region_ID,gis_environment_ID,OS_ID,Diskspace_GB,RAM_GB,CPU,SSL_IssuedTo,SSL_IssuedBy,SSL_ExpiryDate,Note")] GIS_Server server, string[] installedSoftware)
         {
+            if (installedSoftware != null)
+            {
+                server.Software = new List<Software>();
+                foreach (var item in installedSoftware)
+                {
+                    var softwareToAdd = db.Software.Find(int.Parse(item));
+                    server.Software.Add(softwareToAdd);
+                }
+            }
             if (ModelState.IsValid)
             {
-                db.GIS_Server.Add(gIS_Server);
+               // UpdateServerSoftwares(installedSoftware, server);
+                server.Last_Updated = DateTime.UtcNow;
+                server.Last_Updated_By = User.Identity.Name;
+                db.GIS_Server.Add(server);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.gis_environment_ID = new SelectList(db.GIS_Environment, "Environment_ID", "Name", gIS_Server.gis_environment_ID);
-            ViewBag.OS_ID = new SelectList(db.OS, "OS_ID", "OS_Name", gIS_Server.OS_ID);
-            ViewBag.Zone_ID = new SelectList(db.Network_Zone, "Zone_ID", "Name", gIS_Server.Zone_ID);
-            ViewBag.Region_ID= new SelectList(db.DFO_Region, "Region_ID", "Region", gIS_Server.Region_ID);
-            return View(gIS_Server);
+            ViewBag.gis_environment_ID = new SelectList(db.GIS_Environment, "Environment_ID", "Name", server.gis_environment_ID);
+            ViewBag.OS_ID = new SelectList(db.OS, "OS_ID", "OS_Name", server.OS_ID);
+            ViewBag.Zone_ID = new SelectList(db.Network_Zone, "Zone_ID", "Name", server.Zone_ID);
+            ViewBag.Region_ID= new SelectList(db.DFO_Region, "Region_ID", "Region", server.Region_ID);
+            PopulateInstalledSoftwareData(server);
+            return View(server);
         }
 
+        private void PopulateInstalledSoftwareData(GIS_Server server)
+        {
+            var allSoftware = db.Software.OrderBy(i =>i.Name_Version);
+            var serverSoftwares = new HashSet<int>(server.Software.Select(c => c.Software_ID));
+            var viewModel = new List<ServerInstalledSoftwareData>();
+            foreach (var software in allSoftware)
+            {
+                viewModel.Add(new ServerInstalledSoftwareData
+                {
+                    Software_ID = software.Software_ID,
+                    Name_Version=software.Name_Version,
+                    Installed = serverSoftwares.Contains(software.Software_ID)
+                });
+            }
+            ViewBag.Softwares = viewModel;
+
+        }
         // GET: Server/Edit/5
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            GIS_Server gIS_Server = db.GIS_Server.Find(id);
+            GIS_Server gIS_Server = db.GIS_Server.Include(i => i.Software)
+                                        .Where(i => i.Server_ID == id)
+                                        .Single();
+            PopulateInstalledSoftwareData(gIS_Server);
             if (gIS_Server == null)
             {
                 return HttpNotFound();
@@ -184,24 +224,94 @@ namespace eGIS_Management.Controllers
         // POST: Server/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "Server_ID,Name,FQDN,Zone_ID,Port_in_Use,IP_Address,Region_ID,gis_environment_ID,OS_ID,Diskspace_GB,RAM_GB,CPU,SSL_IssuedTo,SSL_IssuedBy,SSL_ExpiryDate,Note")] GIS_Server gIS_Server, string[] installedSoftware)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        UpdateServerSoftwares(installedSoftware, gIS_Server);
+        //        db.Entry(gIS_Server).State = EntityState.Modified;
+               
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    ViewBag.gis_environment_ID = new SelectList(db.GIS_Environment, "Environment_ID", "Name", gIS_Server.gis_environment_ID);
+        //    ViewBag.OS_ID = new SelectList(db.OS, "OS_ID", "OS_Name", gIS_Server.OS_ID);
+        //    ViewBag.Zone_ID = new SelectList(db.Network_Zone, "Zone_ID", "Name", gIS_Server.Zone_ID);
+        //    ViewBag.Region_ID = new SelectList(db.DFO_Region, "Region_ID", "Region", gIS_Server.Region_ID);
+        //    return View(gIS_Server);
+        //}
+
+        // POST: Server/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Server_ID,Name,FQDN,Zone_ID,Port_in_Use,IP_Address,Region_ID,gis_environment_ID,OS_ID,Diskspace_GB,RAM_GB,CPU,SSL_IssuedTo,SSL_IssuedBy,SSL_ExpiryDate,Note,Last_Updated,Last_Updated_By")] GIS_Server gIS_Server)
+        [Authorize(Roles = "Admin,Editor")]
+        public ActionResult Edit(int? id, string[] installedSoftware)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                db.Entry(gIS_Server).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ViewBag.gis_environment_ID = new SelectList(db.GIS_Environment, "Environment_ID", "Name", gIS_Server.gis_environment_ID);
-            ViewBag.OS_ID = new SelectList(db.OS, "OS_ID", "OS_Name", gIS_Server.OS_ID);
-            ViewBag.Zone_ID = new SelectList(db.Network_Zone, "Zone_ID", "Name", gIS_Server.Zone_ID);
-            ViewBag.Region_ID = new SelectList(db.DFO_Region, "Region_ID", "Region", gIS_Server.Region_ID);
-            return View(gIS_Server);
-        }
+            var serverToUpdate = db.GIS_Server.Include(i => i.Software).Where(i => i.Server_ID == id).Single();
+            if (TryUpdateModel(serverToUpdate, "",
+              new string[] { "Name", "FQDN", "Zone_ID", "Port_in_Use", "IP_Address", "Region_ID", "gis_environment_ID", "OS_ID", "Diskspace_GB", "RAM_GB", "CPU", "SSL_IssuedTo", "SSL_IssuedBy", "SSL_ExpiryDate", "Note" }))
+            {
+                try
+                {
 
+
+                    UpdateServerSoftwares(installedSoftware, serverToUpdate);
+                    serverToUpdate.Last_Updated = DateTime.UtcNow;
+                    serverToUpdate.Last_Updated_By = User.Identity.Name;
+                    db.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+                catch (RetryLimitExceededException /* dex */)
+                {
+                    //Log the error (uncomment dex variable name and add a line here to write a log.
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
+                }
+            }
+                
+            ViewBag.gis_environment_ID = new SelectList(db.GIS_Environment, "Environment_ID", "Name", serverToUpdate.gis_environment_ID);
+            ViewBag.OS_ID = new SelectList(db.OS, "OS_ID", "OS_Name", serverToUpdate.OS_ID);
+            ViewBag.Zone_ID = new SelectList(db.Network_Zone, "Zone_ID", "Name", serverToUpdate.Zone_ID);
+            ViewBag.Region_ID = new SelectList(db.DFO_Region, "Region_ID", "Region", serverToUpdate.Region_ID);
+            return View(serverToUpdate);
+        }
+        private void UpdateServerSoftwares(string[] installedSoftware, GIS_Server serverToUpdate)
+        {
+            if (installedSoftware == null)
+            {
+                serverToUpdate.Software = new List<Software>();
+                return;
+            }
+            var installedSoftwareHS = new HashSet<string>(installedSoftware);
+            var serverSoftwares = new HashSet<int>(serverToUpdate.Software.Select(s => s.Software_ID));
+            foreach (var software in db.Software)
+            {
+                if (installedSoftwareHS.Contains(software.Software_ID.ToString()))
+                {
+                    if (!serverSoftwares.Contains(software.Software_ID))
+                    {
+                        serverToUpdate.Software.Add(software);
+                    }
+                }
+                else
+                {
+                    if (serverSoftwares.Contains(software.Software_ID))
+                    {
+                        serverToUpdate.Software.Remove(software);
+                    }
+                }
+            }
+        }
         // GET: Server/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -219,9 +329,13 @@ namespace eGIS_Management.Controllers
         // POST: Server/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
-            GIS_Server gIS_Server = db.GIS_Server.Find(id);
+            
+            GIS_Server gIS_Server = db.GIS_Server.Include(i => i.Software)
+                                                .Where(i => i.Server_ID == id)
+                                                .Single();
             db.GIS_Server.Remove(gIS_Server);
             db.SaveChanges();
             return RedirectToAction("Index");

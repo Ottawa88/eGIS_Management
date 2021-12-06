@@ -15,12 +15,14 @@ namespace eGIS_Management.Controllers
         private IMTS_GISEntities db = new IMTS_GISEntities();
 
         // GET: Tech_Support
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Index()
         {
             return View(db.Tech_Support.ToList());
         }
 
         // GET: Tech_Support/Details/5
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -36,6 +38,7 @@ namespace eGIS_Management.Controllers
         }
 
         // GET: Tech_Support/Create
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Create()
         {
             return View();
@@ -46,6 +49,7 @@ namespace eGIS_Management.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Create([Bind(Include = "ID,First_Name,Last_Name,Email,Phone")] Tech_Support tech_Support)
         {
             if (ModelState.IsValid)
@@ -59,6 +63,7 @@ namespace eGIS_Management.Controllers
         }
 
         // GET: Tech_Support/Edit/5
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -78,6 +83,7 @@ namespace eGIS_Management.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Edit([Bind(Include = "ID,First_Name,Last_Name,Email,Phone")] Tech_Support tech_Support)
         {
             if (ModelState.IsValid)
@@ -90,6 +96,7 @@ namespace eGIS_Management.Controllers
         }
 
         // GET: Tech_Support/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -107,6 +114,7 @@ namespace eGIS_Management.Controllers
         // POST: Tech_Support/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
             Tech_Support tech_Support = db.Tech_Support.Find(id);

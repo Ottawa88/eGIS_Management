@@ -26,16 +26,21 @@ namespace eGIS_Management.Models
         public Nullable<int> ClientContact1 { get; set; }
         public Nullable<int> ClientContact2 { get; set; }
         public string DevOps_Link_En { get; set; }
-        public string DevOps_Link_Fr { get; set; }
         public string Technical_Doc_Link { get; set; }
         public string Note { get; set; }
         public Nullable<System.DateTime> Last_Updated { get; set; }
         public string Last_UpdatedBy { get; set; }
+        public short TypeID { get; set; }
+        public short RegionID { get; set; }
+        public short SectorID { get; set; }
     
         public virtual Client_Contact Client_Contact { get; set; }
         public virtual Client_Contact Client_Contact1 { get; set; }
         public virtual GIS_Environment GIS_Environment { get; set; }
         public virtual Tech_Support Tech_Support { get; set; }
         public virtual Tech_Support Tech_Support1 { get; set; }
+        public virtual ApplicationType ApplicationType { get; set; }
+        public virtual DFO_Region DFO_Region { get; set; }
+        public virtual RegionSectors RegionSectors { get; set; }
     }
 }

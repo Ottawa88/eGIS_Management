@@ -1,0 +1,186 @@
+﻿@model eGIS_Management.Models.ViewModels.GIS_EnvironmentIndexData
+
+@{
+    ViewBag.Title = "GIS Environment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>GIS Environment</h2>
+
+<p>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("Editor") | User.IsInRole("Admin"))
+        {
+            @Html.ActionLink("Create New", "Create")
+        }
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.Raw("Name")
+        </th>
+        <th>
+            @Html.Raw("Description")
+        </th>
+        <th>
+            @Html.Raw("URL")
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.GIS_Environments)
+    {
+        string selectedRow = "";
+        if (item.Environment_ID == ViewBag.Environment_ID)
+        {
+            selectedRow = "success";
+        }
+        <tr class="@selectedRow">
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @if (item.URL != null)
+                {
+                    @Html.DisplayFor(modelItem => item.URL)
+                }
+                else
+                {
+                    @Html.Raw("N/A")
+                }
+            </td>
+
+            <td>
+                @Html.ActionLink("Select", "Index", new { id = item.Environment_ID }) |
+
+
+
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Admin") | User.IsInRole("Editor"))
+                    {
+                        @Html.ActionLink("Edit |", "Edit", new { id = item.Environment_ID })
+                    }
+                }
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (User.IsInRole("Admin"))
+                    {
+                        @Html.ActionLink("Delete |", "Delete", new { id = item.Environment_ID })
+                    }
+                }
+
+                @Html.ActionLink("Details", "Details", new { id = item.Environment_ID })
+
+            </td>
+        </tr>
+    }
+
+</table>
+@if (Model.GIS_Servers == null)
+{
+    <div class="form-group">
+        <span class="control-label col-md-12"><strong> @Html.ActionLink("Download Full Size Diagram", "Download", new { id = 0})</strong></span>
+
+        <div class="col-md-12">
+            <!--<img src="@Url.Content("~/Data_Content/eGIS Architecture FULL.png" )" alt="eGIS Diagram" style="width:300px;height:400px;" />-->
+            <img src="@Url.Content("~/Data_Content/eGIS Architecture FULL.png")" alt="eGIS Diagram" />
+        </div>
+    </div>
+}
+
+@if (ViewBag.EnvDiagram != null)
+{
+    <div class="form-group">
+        <span class="control-label col-md-12"><strong> @Html.ActionLink("Download Full Size Diagram", "Download", new { id = ViewBag.Environment_ID })</strong></span>
+
+        <div class="col-md-12">
+            <!--<img src="@Url.Content("~/Data_Content/"+ViewBag.EnvDiagram)" alt="Diagram" style="width:300px;height:400px;" />-->
+            <img src="@Url.Content("~/Data_Content/"+ViewBag.EnvDiagram)" alt="Diagram" />
+        </div>
+    </div>
+}
+@if (Model.GIS_Servers != null)
+{
+    <h3>GIS Servers within the Selected GIS Environment</h3>
+    <table class="table">
+        <tr>
+
+            <th>Name</th>
+            <th>Zone</th>
+            <th>Region</th>
+            <th>Diskspace(GB)</th>
+            <th>RAM (GB)</th>
+            <th>IP Address</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.GIS_Servers)
+        {
+            string selectedRow = "";
+            if (item.Server_ID == ViewBag.Server_ID)
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+
+                <td>
+
+
+                    @Html.Raw("<a href=\"\\GIS_Management\\Server\\Details\\" + item.Server_ID + "\"> " + item.Name + " </a>")
+                </td>
+                <td>
+                    @item.Network_Zone.Name
+                </td>
+                <td>
+                    @item.DFO_Region.Region
+                </td>
+                <td>
+                    @item.Diskspace_GB
+                </td>
+                <td>
+                    @item.RAM_GB
+                </td>
+                <td>
+                    @item.IP_Address
+                </td>
+                <td>
+                    @Html.ActionLink("Select", "Index", new { Server_ID = item.Server_ID })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+@if (Model.Softwares != null)
+{
+    <h3>
+        Software Installed on This Server
+    </h3>
+    <table class="table">
+        <tr>
+            <th>Software Name</th>
+            <th>Note</th>
+        </tr>
+        @foreach (var item in Model.Softwares)
+        {
+            <tr>
+                <td>
+                    @item.Name_Version
+                </td>
+                <td>
+                    @item.Note
+                </td>
+            </tr>
+        }
+    </table>
+}
+

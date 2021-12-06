@@ -15,12 +15,14 @@ namespace eGIS_Management.Controllers
         private IMTS_GISEntities db = new IMTS_GISEntities();
 
         // GET: Software
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Index()
         {
-            return View(db.Software.ToList());
+            return View(db.Software.OrderBy(i=>i.Name_Version).ToList());
         }
 
         // GET: Software/Details/5
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -36,6 +38,7 @@ namespace eGIS_Management.Controllers
         }
 
         // GET: Software/Create
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Create()
         {
             return View();
@@ -46,10 +49,13 @@ namespace eGIS_Management.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Create([Bind(Include = "Software_ID,Name_Version,Note,Last_Updated,Last_UpdatedBy")] Software software)
         {
             if (ModelState.IsValid)
             {
+                software.Last_Updated = DateTime.UtcNow;
+                software.Last_UpdatedBy = User.Identity.Name;
                 db.Software.Add(software);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -59,6 +65,7 @@ namespace eGIS_Management.Controllers
         }
 
         // GET: Software/Edit/5
+        [Authorize(Roles = "Admin,Editor")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -78,10 +85,13 @@ namespace eGIS_Management.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Software_ID,Name_Version,Note,Last_Updated,Last_UpdatedBy")] Software software)
+        [Authorize(Roles = "Admin,Editor")]
+        public ActionResult Edit([Bind(Include = "Software_ID,Name_Version,Note")] Software software)
         {
             if (ModelState.IsValid)
             {
+                software.Last_Updated = DateTime.UtcNow;
+                software.Last_UpdatedBy = User.Identity.Name;
                 db.Entry(software).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -90,6 +100,7 @@ namespace eGIS_Management.Controllers
         }
 
         // GET: Software/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -107,6 +118,7 @@ namespace eGIS_Management.Controllers
         // POST: Software/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
             Software software = db.Software.Find(id);

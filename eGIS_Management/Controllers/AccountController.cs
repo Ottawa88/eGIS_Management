@@ -169,7 +169,7 @@ namespace eGIS_Management.Controllers
 
                     
                     await this.UserManager.AddToRoleAsync(user.Id, model.UserRole);
-                    return RedirectToAction("Index", "Server");
+                    return RedirectToAction("Index", "GIS_Environment");
                 }
                 ViewBag.Name = new SelectList(context.Roles.ToList(), "Name", "Name");
                 AddErrors(result);
@@ -221,7 +221,7 @@ namespace eGIS_Management.Controllers
                 // Send an email with this link
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                string msgBody = "<p> Please reset your <b>DFO_MapServiceManager</b> password by clicking <a href=\"" + callbackUrl + "\">here</a></p>";
+                string msgBody = "<p> Please reset your <b>GIS_Management application</b> password by clicking <a href=\"" + callbackUrl + "\">here</a></p>";
                 msgBody += "<p>If you did not request a password reset, you do not need to take any action.</p><br>";
                 msgBody += "**<b>Note: Please <u>do not reply to this automated email.</u></b>**";
                 await UserManager.SendEmailAsync(user.Id, "Reset Password", msgBody);
