@@ -181,7 +181,17 @@ namespace eGIS_Management.Controllers
             ViewBag.TechSupport2 = new SelectList(db.Tech_Support, "ID", "Email", application.TechSupport2);
             ViewBag.TypeID = new SelectList(db.ApplicationType, "TypeID", "TypeName", application.TypeID);
             ViewBag.RegionID= new SelectList(db.DFO_Region, "Region_ID", "Region", application.RegionID);
-            ViewBag.SectorID= new SelectList(db.RegionSectors, "SectorID", "SectorName", application.SectorID);
+            List<RegionSectors> sectors;
+            if (application.RegionID > 0)
+            {
+                sectors = (from a in db.RegionSectors where a.RegionID == application.RegionID orderby a.SectorName select a).ToList();
+                ViewBag.SectorID = new SelectList(sectors, "SectorID", "SectorName", application.SectorID);
+            }
+            else {
+                sectors = (from a in db.RegionSectors orderby a.SectorName select a).Take(1).ToList();
+                ViewBag.SectorID = new SelectList(sectors, "SectorID", "SectorName", application.SectorID);
+            }
+            
             return View(application);
         }
 

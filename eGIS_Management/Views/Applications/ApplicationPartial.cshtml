@@ -1,8 +1,9 @@
 ﻿@model eGIS_Management.Models.Application
-
+<script src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        var sectorID = $("#fgpRecord_SectorID").val();
+       
+        var sectorID = $("#SectorID").val();
         if (sectorID == 0)
         { DFORegionChanged();}
 
